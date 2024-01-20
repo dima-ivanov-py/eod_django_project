@@ -1,0 +1,74 @@
+[tool.black]
+line-length = 79
+
+[tool.isort]
+profile = "black"
+line_length = 79
+skip_glob = [
+    "dbmodels/models/__init__.py",
+    "api/v1/endpoints/__init__.py",
+    "core/root_endpoints/endpoints/__init__.py",
+]
+
+[tool.ruff]
+ignore = []
+exclude = [
+    "core/settings",
+    "core/root_endpoints/apps.py",
+    "core/root_endpoints/endpoints/__init__.py",
+    "api/v1/apps.py",
+    "api/v1/endpoints/__init__.py",
+    "dbmodels/models/__init__.py",
+    "library",
+]
+line-length = 79
+target-version = "py311"
+
+[tool.ruff.mccabe]
+max-complexity = 5
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "core.settings"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]
+python_files = ["*_test.py"]
+
+[[tool.mypy.overrides]]
+module = [
+    "*.settings.*",
+    "*.migrations.*",
+    "*.urls",
+    "library.*",
+]
+ignore_errors = true
+
+[tool.poetry]
+name = "core"
+version = "0.1.0"
+description = ""
+authors = ["Metanoia1 <meta3479@gmail.com>"]
+readme = "README.md"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+djangorestframework = "^3.14.0"
+python-dotenv = "^1.0.0"
+djangorestframework-simplejwt = "^5.3.0"
+psycopg2 = "^2.9.7"
+requests = "^2.31.0"
+types-requests = "^2.31.0.10"
+django = "^5.0"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^3.3.2"
+pytest-django = "^4.5.2"
+drf-yasg = "^1.21.7"
+ruff = "^0.0.286"
+isort = "^5.12.0"
+mypy = "^1.6.1"
+ipython = "^8.17.2"

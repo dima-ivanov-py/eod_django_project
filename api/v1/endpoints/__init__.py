@@ -1,3 +1,1 @@
-import api.v1.endpoints.users
-import api.v1.endpoints.account_list
-
+from api.v1 import *
