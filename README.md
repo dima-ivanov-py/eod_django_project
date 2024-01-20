@@ -36,8 +36,8 @@ class DoSomethingInteractor:
         param_2 = input_.param_2
         param_3 = input_.param_3
 
-        do_something_selector_output = self._do_something_selector(
-            input_=self._do_something_selector.Input(
+        get_something_selector_output = self._get_something_selector(
+            input_=self._get_something_selector.Input(
                 param_1=param_1,
                 param_2=param_2,
                 param_3=param_3,
