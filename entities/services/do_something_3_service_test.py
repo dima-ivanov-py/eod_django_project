@@ -1,6 +1,6 @@
 import pytest
 
-from services.do_something_3_service import DoSomething3Service
+from entities.services.do_something_3_service import DoSomething3Service
 
 
 class TestDoSomething3Service:

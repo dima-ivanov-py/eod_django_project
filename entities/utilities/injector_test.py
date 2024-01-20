@@ -1,6 +1,6 @@
 import pytest
 
-from library.injector import Injector, inject
+from entities.utilities.injector import Injector, inject
 
 
 class Person:

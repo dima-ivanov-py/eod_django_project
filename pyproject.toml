@@ -19,7 +19,7 @@ exclude = [
     "api/v1/apps.py",
     "api/v1/endpoints/__init__.py",
     "dbmodels/models/__init__.py",
-    "library",
+    "entities/utilities",
 ]
 line-length = 79
 target-version = "py311"
@@ -39,7 +39,7 @@ module = [
     "*.settings.*",
     "*.migrations.*",
     "*.urls",
-    "library.*",
+    "*.utilities.*",
 ]
 ignore_errors = true
 

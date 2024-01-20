@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from typing import Any
 
-from library.injector import inject
-from services.do_something_1_service import DoSomething1Service
-from services.do_something_2_service import DoSomething2Service
-from services.do_something_3_service import DoSomething3Service
+from entities.services.do_something_1_service import DoSomething1Service
+from entities.services.do_something_2_service import DoSomething2Service
+from entities.services.do_something_3_service import DoSomething3Service
+from entities.utilities.injector import inject
 
 
 class DoSomething1UseCase:

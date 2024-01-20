@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Any
 
 
-class GetSomething1Repo:
+class GetSomething1Selector:
     @dataclass
     class Input:
         param_1: Any

@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from typing import Any
 
-from library.injector import inject
-from use_cases.do_something_1_use_case import DoSomething1UseCase
-from use_cases.do_something_2_use_case import DoSomething2UseCase
-from use_cases.do_something_3_use_case import DoSomething3UseCase
+from entities.use_cases.do_something_1_use_case import DoSomething1UseCase
+from entities.use_cases.do_something_2_use_case import DoSomething2UseCase
+from entities.use_cases.do_something_3_use_case import DoSomething3UseCase
+from entities.utilities.injector import inject
 
 
 class DoSomething1Interactor:

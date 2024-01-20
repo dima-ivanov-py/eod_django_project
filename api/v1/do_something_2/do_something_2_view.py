@@ -9,7 +9,7 @@ from api.v1.do_something_2.do_something_2_interactor import (
 
 class DoSomething2View(APIView):
     def post(self, request):
-        do_something_2 = DoSomething2Interactor()
+        do_something_2_interactor = DoSomething2Interactor()
         input_ = DoSomething2Interactor.Input(
             param_1=request.POST["param_1"],
             param_2=request.POST["param_2"],
@@ -17,7 +17,9 @@ class DoSomething2View(APIView):
         )
 
         try:
-            output: DoSomething2Interactor.Output = do_something_2(input_)
+            output: DoSomething2Interactor.Output = do_something_2_interactor(
+                input_
+            )
         except DoSomething2Interactor.Error as e:
             response = Response(
                 data={"error": str(e)},

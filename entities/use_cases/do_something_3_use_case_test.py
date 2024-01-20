@@ -1,6 +1,6 @@
 import pytest
 
-from use_cases.do_something_3_use_case import DoSomething3UseCase
+from entities.use_cases.do_something_3_use_case import DoSomething3UseCase
 
 
 class TestDoSomething3UseCase:
