@@ -325,7 +325,7 @@ class GetFullNameOfSomethingByIdSelector:
         )
 ```
 ###### Utility
->A utility is an isolated non-business algorithm that does not change the state of the system.
+>A utility is an isolated non-business algorithm that does not change the state of the database.
 ```python
 from functools import wraps
 from typing import get_type_hints
