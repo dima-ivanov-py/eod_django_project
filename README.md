@@ -257,7 +257,7 @@ class DoSomethingService:
 ###### Selector
 >A selector is a complex query to a database that does not alter its state and is encapsulated in a separate function for subsequent reuse.
 ```python
-class GetSomethingSelector:
+class GetSomethingsSelector:
     @dataclass(frozen=True)
     class Input:
         param_1: Any
@@ -279,7 +279,7 @@ class GetSomethingSelector:
             param_3=param_3,
         )
 
-        return self.Output(somethings=somethings)
+        return self.Output(somethings)
 
 
 class GetSomethingByIdSelector:
@@ -296,7 +296,7 @@ class GetSomethingByIdSelector:
 
         something = Something.objects.get(id=something_id)
 
-        return self.Output(something=something)
+        return self.Output(something)
 
 
 class GetFullNameOfSomethingByIdSelector:
