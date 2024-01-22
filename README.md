@@ -4,7 +4,7 @@
 ###### Endpoint
 >An endpoint is the entry point for calling an interactor.
 ```python
-# POST: api/v1/do-something/
+# POST: api/v1/do-something/ {"param_1": ..., "param_2": ..., "param_3": ...}
 class DoSomethingView(APIView):
     def post(self, request):
         do_something_interactor = DoSomethingInteractor()
