@@ -2,10 +2,12 @@
 >Endpoint-oriented development is an approach in which each endpoint encapsulates all the necessary business logic and is maximally isolated from other endpoints.
 ### Entities:
 ###### Endpoint
->An endpoint is the entry point for calling an interactor.
+>An endpoint is a controller in the MVC pattern.
+>* Endpoint can call not more than one interactor.
+>* Endpoint can serve only one HTTP method.
 ```python
 # POST: api/v1/do-something/ {"param_1": ..., "param_2": ..., "param_3": ...}
-class DoSomethingView(APIView):
+class DoSomethingEndpoint(APIView):
     def post(self, request):
         do_something_interactor = DoSomethingInteractor()
         input_ = do_something_interactor.Input(
@@ -35,7 +37,7 @@ class DoSomethingView(APIView):
 
 
 # GET: api/v1/get-something/?param_1=...&param_2=...&param_3=...
-class GetSomethingView(APIView):
+class GetSomethingEndpoint(APIView):
     def get(self, request):
         get_something_interactor = GetSomethingInteractor()
         input_ = get_something_interactor.Input(
@@ -65,6 +67,7 @@ class GetSomethingView(APIView):
 ```
 ###### Interactor
 >An interactor is the entry point into the business logic.
+>* Interactor can depend on any amount of other entities but not on any other interactor.
 ```python
 class DoSomethingInteractor:
     @dataclass(frozen=True)
