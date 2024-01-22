@@ -92,40 +92,33 @@ class DoSomethingInteractor:
     @inject
     def __init__(
         self,
-        get_something_selector: GetSomethingSelector,
-        do_something_service: DoSomethingService,
+        # Here can be any amount of tasks, use cases, services and selectors as dependencies.
+        do_something_task: DoSomethingTask,
         do_something_use_case: DoSomethingUseCase,
+        do_something_service: DoSomethingService,
+        get_something_selector: GetSomethingSelector,
     ) -> None:
-        self._get_something_selector = get_something_selector
-        self._do_something_service = do_something_service
+        self._do_something_task = do_something_task
         self._do_something_use_case = do_something_use_case
+        self._do_something_service = do_something_service
+        self._get_something_selector = get_something_selector
 
     def __call__(self, input_: Input) -> Output:
         param_1 = input_.param_1
         param_2 = input_.param_2
         param_3 = input_.param_3
 
-        # Here can be any additional logic.
+        # Here can be any additional business logic.
 
-        get_something_selector_output = self._get_something_selector(
-            input_=self._get_something_selector.Input(
+        do_something_task_output = self._do_something_task(
+            input_=self._do_something_task.Input(
                 param_1=ANY,
                 param_2=ANY,
                 param_3=ANY,
             )
         )
 
-        # Here can be any additional logic.
-
-        do_something_service_output = self._do_something_service(
-            input_=self._do_something_service.Input(
-                param_1=ANY,
-                param_2=ANY,
-                param_3=ANY,
-            )
-        )
-
-        # Here can be any additional logic.
+        # Here can be any additional business logic.
 
         do_something_use_case_output = self._do_something_use_case(
             input_=self._do_something_use_case.Input(
@@ -135,7 +128,27 @@ class DoSomethingInteractor:
             )
         )
 
-        # Here can be any additional logic.
+        # Here can be any additional business logic.
+
+        do_something_service_output = self._do_something_service(
+            input_=self._do_something_service.Input(
+                param_1=ANY,
+                param_2=ANY,
+                param_3=ANY,
+            )
+        )
+
+        # Here can be any additional business logic.
+
+        get_something_selector_output = self._get_something_selector(
+            input_=self._get_something_selector.Input(
+                param_1=ANY,
+                param_2=ANY,
+                param_3=ANY,
+            )
+        )
+
+        # Here can be any additional business logic.
 
         return self.Output(
             param_1=ANY,
@@ -144,7 +157,80 @@ class DoSomethingInteractor:
         )
 ```
 ###### Task
->A task is an isolated business algorithm that will be executed asynchronously.
+>A task is an isolated business algorithm that calls one or more background tasks.
+```python
+class DoSomethingTask:
+    @dataclass(frozen=True)
+    class Input:
+        param_1: Any
+        param_2: Any
+        param_3: Any
+
+    @dataclass(frozen=True)
+    class Output:
+        param_1: Any
+        param_2: Any
+        param_3: Any
+
+    @inject
+    def __init__(
+        self,
+        # Here can be any amount of use cases, services and selectors as dependencies.
+        do_something_use_case: DoSomethingUseCase,
+        do_something_service: DoSomethingService,
+        get_something_selector: GetSomethingSelector,
+    ) -> None:
+        self._do_something_use_case = do_something_use_case
+        self._do_something_service = do_something_service
+        self._get_something_selector = get_something_selector
+
+    def __call__(self, input_: Input) -> Output:
+        param_1 = input_.param_1
+        param_2 = input_.param_2
+        param_3 = input_.param_3
+
+        # Here can be call of a background task.
+        # do_something_task.delay(...)
+
+        do_something_use_case_output = self._do_something_use_case(
+            input_=self._do_something_use_case.Input(
+                param_1=ANY,
+                param_2=ANY,
+                param_3=ANY,
+            )
+        )
+
+        # Here can be call of a background task.
+        # do_something_task.delay(...)
+
+        do_something_service_output = self._do_something_service(
+            input_=self._do_something_service.Input(
+                param_1=ANY,
+                param_2=ANY,
+                param_3=ANY,
+            )
+        )
+
+        # Here can be call of a background task.
+        # do_something_task.delay(...)
+
+        get_something_selector_output = self._get_something_selector(
+            input_=self._get_something_selector.Input(
+                param_1=ANY,
+                param_2=ANY,
+                param_3=ANY,
+            )
+        )
+
+        # Here can be call of a background task.
+        # do_something_task.delay(...)
+
+        return self.Output(
+            param_1=ANY,
+            param_2=ANY,
+            param_3=ANY,
+        )
+```
 ###### Use Case
 >A use case is an isolated business algorithm that changes the state of the database.
 ```python
@@ -164,11 +250,12 @@ class DoSomethingUseCase:
     @inject
     def __init__(
         self,
-        get_something_selector: GetSomethingSelector,
+        # Here can be any amount of services and selectors as dependencies.
         do_something_service: DoSomethingService,
+        get_something_selector: GetSomethingSelector,
     ) -> None:
-        self._get_something_selector = get_something_selector
         self._do_something_service = do_something_service
+        self._get_something_selector = get_something_selector
 
     def __call__(self, input_: Input) -> Output:
         param_1 = input_.param_1
@@ -178,22 +265,22 @@ class DoSomethingUseCase:
         # Here can be logic that changes the state of the database.
         # Something.objects.create(...)
 
-        get_something_selector_output = self._get_something_selector(
-            input_=self._get_something_selector.Input(
-                param_1=param_1,
-                param_2=param_2,
-                param_3=param_3,
+        do_something_service_output = self._do_something_service(
+            input_=self._do_something_service.Input(
+                param_1=get_something_selector_output.param_1,
+                param_2=get_something_selector_output.param_2,
+                param_3=get_something_selector_output.param_3,
             )
         )
 
         # Here can be logic that changes the state of the database.
         # Something.objects.create(...)
 
-        do_something_service_output = self._do_something_service(
-            input_=self._do_something_service.Input(
-                param_1=get_something_selector_output.param_1,
-                param_2=get_something_selector_output.param_2,
-                param_3=get_something_selector_output.param_3,
+        get_something_selector_output = self._get_something_selector(
+            input_=self._get_something_selector.Input(
+                param_1=param_1,
+                param_2=param_2,
+                param_3=param_3,
             )
         )
 
@@ -225,6 +312,7 @@ class DoSomethingService:
     @inject
     def __init__(
         self,
+        # Here can be any amount of selectors as dependencies.
         get_something_selector: GetSomethingSelector,
     ) -> None:
         self._get_something_selector = get_something_selector
