@@ -2,9 +2,11 @@
 >Endpoint-oriented development is an approach in which each endpoint encapsulates all the necessary business logic and is maximally isolated from other endpoints.
 ### Entities:
 ###### Endpoint
->An endpoint is a controller in the MVC pattern.
+>An endpoint is a controller in the [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) pattern.
 >* Endpoint can call not more than one interactor.
 >* Endpoint can serve only one HTTP method.
+
+Endpoint example:
 ```python
 # POST: api/v1/do-something/ {"param_1": ..., "param_2": ..., "param_3": ...}
 class DoSomethingEndpoint(APIView):
@@ -72,6 +74,8 @@ class GetSomethingEndpoint(APIView):
 ###### Interactor
 >An interactor is the entry point into the business logic.
 >* Interactor can depend on any amount of other entities but not on any other interactor.
+
+Interactor example:
 ```python
 class DoSomethingInteractor:
     @dataclass(frozen=True)
@@ -101,13 +105,13 @@ class DoSomethingInteractor:
     @inject
     def __init__(
         self,
-        # Here can be any amount of tasks, use cases, services and selectors as dependencies.
-        do_something_task: DoSomethingTask,
+        # Here can be any amount of jobs, use cases, services and selectors as dependencies.
+        do_something_job: DoSomethingJob,
         do_something_use_case: DoSomethingUseCase,
         do_something_service: DoSomethingService,
         get_something_selector: GetSomethingSelector,
     ) -> None:
-        self._do_something_task = do_something_task
+        self._do_something_job = do_something_job
         self._do_something_use_case = do_something_use_case
         self._do_something_service = do_something_service
         self._get_something_selector = get_something_selector
@@ -119,8 +123,8 @@ class DoSomethingInteractor:
 
         # Here can be any additional business logic.
 
-        do_something_task_response = self._do_something_task.execute(
-            request=self._do_something_task.Request(
+        do_something_job_response = self._do_something_job.execute(
+            request=self._do_something_job.Request(
                 param_1=ANY,
                 param_2=ANY,
                 param_3=ANY,
@@ -165,10 +169,12 @@ class DoSomethingInteractor:
             param_3=ANY,
         )
 ```
-###### Task
->A task is an isolated business algorithm that calls one or more background tasks.
+###### Job
+>A job is an isolated business algorithm that calls one or more background tasks.
+
+Job example:
 ```python
-class DoSomethingTask:
+class DoSomethingJob:
     @dataclass(frozen=True)
     class Request:
         param_1: Any
@@ -242,6 +248,8 @@ class DoSomethingTask:
 ```
 ###### Use Case
 >A use case is an isolated business algorithm that changes the state of the database.
+
+Use Case example:
 ```python
 class DoSomethingUseCase:
     @dataclass(frozen=True)
@@ -304,6 +312,8 @@ class DoSomethingUseCase:
 ```
 ###### Service
 >A service is an isolated business algorithm that does not change the state of the database.
+
+Service example:
 ```python
 class DoSomethingService:
     @dataclass(frozen=True)
@@ -353,6 +363,8 @@ class DoSomethingService:
 ```
 ###### Selector
 >A selector is a complex query to a database that does not alter its state and is encapsulated in a separate function for subsequent reuse.
+
+Selector example:
 ```python
 class GetSomethingsSelector:
     @dataclass(frozen=True)
@@ -423,6 +435,8 @@ class GetFullNameOfSomethingByIdSelector:
 ```
 ###### Utility
 >A utility is an isolated non-business algorithm that does not change the state of the database.
+
+Utility example:
 ```python
 from functools import wraps
 from typing import get_type_hints
