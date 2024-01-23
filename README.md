@@ -1,10 +1,14 @@
 ## Endpoint-oriented Development (EOD)
->Endpoint-oriented development is an approach in which each endpoint encapsulates all the necessary business logic and is maximally isolated from other endpoints.
+> Endpoint-oriented development is an approach in which each endpoint encapsulates all the necessary business logic and is maximally isolated from other endpoints.
+
 ### Entities:
+
 ###### Endpoint
->An endpoint is a controller in the [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) pattern.
+> An **endpoint** in a context of EOD is a controller in the [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) pattern.
 >* Endpoint can call not more than one interactor.
 >* Endpoint can serve only one HTTP method.
+>* The name of url that invokes the endpoint must be a verb phrase in the imperative mood.
+>* The name of the endpoint must be a verb phrase in the imperative mood.
 
 Endpoint example:
 ```python
