@@ -10,14 +10,16 @@
 class DoSomethingEndpoint(APIView):
     def post(self, request):
         do_something_interactor = DoSomethingInteractor()
-        input_ = do_something_interactor.Input(
+        do_something_interactor_request = do_something_interactor.Request(
             param_1=request.POST["param_1"],
             param_2=request.POST["param_2"],
             param_3=request.POST["param_3"],
         )
 
         try:
-            output = do_something_interactor(input_)
+            do_something_interactor_response = do_something_interactor.execute(
+                request=do_something_interactor_request,
+            )
         except do_something_interactor.Error as e:
             response = Response(
                 data=present_error(e),
@@ -26,9 +28,9 @@ class DoSomethingEndpoint(APIView):
         else:
             response = Response(
                 data={
-                    "param_1": output.param_1,
-                    "param_2": output.param_2,
-                    "param_3": output.param_3,
+                    "param_1": do_something_interactor_response.param_1,
+                    "param_2": do_something_interactor_response.param_2,
+                    "param_3": do_something_interactor_response.param_3,
                 },
                 status=status.HTTP_200_OK,
             )
@@ -40,14 +42,16 @@ class DoSomethingEndpoint(APIView):
 class GetSomethingEndpoint(APIView):
     def get(self, request):
         get_something_interactor = GetSomethingInteractor()
-        input_ = get_something_interactor.Input(
+        get_something_interactor_request = get_something_interactor.Request(
             param_1=request.query_params.get("param_1"),
             param_2=request.query_params.get("param_2"),
             param_3=request.query_params.get("param_3"),
         )
 
         try:
-            output = get_something_interactor(input_)
+            get_something_interactor_response = get_something_interactor.execute(
+                request=get_something_interactor_request,
+            )
         except get_something_interactor.Error as e:
             response = Response(
                 data=present_error(e),
@@ -56,9 +60,9 @@ class GetSomethingEndpoint(APIView):
         else:
             response = Response(
                 data={
-                    "param_1": output.param_1,
-                    "param_2": output.param_2,
-                    "param_3": output.param_3,
+                    "param_1": get_something_interactor_response.param_1,
+                    "param_2": get_something_interactor_response.param_2,
+                    "param_3": get_something_interactor_response.param_3,
                 },
                 status=status.HTTP_200_OK,
             )
@@ -71,13 +75,13 @@ class GetSomethingEndpoint(APIView):
 ```python
 class DoSomethingInteractor:
     @dataclass(frozen=True)
-    class Input:
+    class Request:
         param_1: Any
         param_2: Any
         param_3: Any
 
     @dataclass(frozen=True)
-    class Output:
+    class Response:
         param_1: Any
         param_2: Any
         param_3: Any
@@ -108,15 +112,15 @@ class DoSomethingInteractor:
         self._do_something_service = do_something_service
         self._get_something_selector = get_something_selector
 
-    def __call__(self, input_: Input) -> Output:
-        param_1 = input_.param_1
-        param_2 = input_.param_2
-        param_3 = input_.param_3
+    def execute(self, request: Request) -> Response:
+        param_1 = request.param_1
+        param_2 = request.param_2
+        param_3 = request.param_3
 
         # Here can be any additional business logic.
 
-        do_something_task_output = self._do_something_task(
-            input_=self._do_something_task.Input(
+        do_something_task_response = self._do_something_task.execute(
+            request=self._do_something_task.Request(
                 param_1=ANY,
                 param_2=ANY,
                 param_3=ANY,
@@ -125,8 +129,8 @@ class DoSomethingInteractor:
 
         # Here can be any additional business logic.
 
-        do_something_use_case_output = self._do_something_use_case(
-            input_=self._do_something_use_case.Input(
+        do_something_use_case_response = self._do_something_use_case.execute(
+            request=self._do_something_use_case.Request(
                 param_1=ANY,
                 param_2=ANY,
                 param_3=ANY,
@@ -135,8 +139,8 @@ class DoSomethingInteractor:
 
         # Here can be any additional business logic.
 
-        do_something_service_output = self._do_something_service(
-            input_=self._do_something_service.Input(
+        do_something_service_response = self._do_something_service.execute(
+            request=self._do_something_service.Request(
                 param_1=ANY,
                 param_2=ANY,
                 param_3=ANY,
@@ -145,8 +149,8 @@ class DoSomethingInteractor:
 
         # Here can be any additional business logic.
 
-        get_something_selector_output = self._get_something_selector(
-            input_=self._get_something_selector.Input(
+        get_something_selector_response = self._get_something_selector.execute(
+            request=self._get_something_selector.Request(
                 param_1=ANY,
                 param_2=ANY,
                 param_3=ANY,
@@ -155,7 +159,7 @@ class DoSomethingInteractor:
 
         # Here can be any additional business logic.
 
-        return self.Output(
+        return self.Response(
             param_1=ANY,
             param_2=ANY,
             param_3=ANY,
@@ -166,13 +170,13 @@ class DoSomethingInteractor:
 ```python
 class DoSomethingTask:
     @dataclass(frozen=True)
-    class Input:
+    class Request:
         param_1: Any
         param_2: Any
         param_3: Any
 
     @dataclass(frozen=True)
-    class Output:
+    class Response:
         param_1: Any
         param_2: Any
         param_3: Any
@@ -189,16 +193,16 @@ class DoSomethingTask:
         self._do_something_service = do_something_service
         self._get_something_selector = get_something_selector
 
-    def __call__(self, input_: Input) -> Output:
-        param_1 = input_.param_1
-        param_2 = input_.param_2
-        param_3 = input_.param_3
+    def execute(self, request: Request) -> Response:
+        param_1 = request.param_1
+        param_2 = request.param_2
+        param_3 = request.param_3
 
         # Here can be call of a background task.
         # do_something_task.delay(...)
 
-        do_something_use_case_output = self._do_something_use_case(
-            input_=self._do_something_use_case.Input(
+        do_something_use_case_response = self._do_something_use_case.execute(
+            request=self._do_something_use_case.Request(
                 param_1=ANY,
                 param_2=ANY,
                 param_3=ANY,
@@ -208,8 +212,8 @@ class DoSomethingTask:
         # Here can be call of a background task.
         # do_something_task.delay(...)
 
-        do_something_service_output = self._do_something_service(
-            input_=self._do_something_service.Input(
+        do_something_service_response = self._do_something_service.execute(
+            request=self._do_something_service.Request(
                 param_1=ANY,
                 param_2=ANY,
                 param_3=ANY,
@@ -219,8 +223,8 @@ class DoSomethingTask:
         # Here can be call of a background task.
         # do_something_task.delay(...)
 
-        get_something_selector_output = self._get_something_selector(
-            input_=self._get_something_selector.Input(
+        get_something_selector_response = self._get_something_selector.execute(
+            request=self._get_something_selector.Request(
                 param_1=ANY,
                 param_2=ANY,
                 param_3=ANY,
@@ -230,7 +234,7 @@ class DoSomethingTask:
         # Here can be call of a background task.
         # do_something_task.delay(...)
 
-        return self.Output(
+        return self.Response(
             param_1=ANY,
             param_2=ANY,
             param_3=ANY,
@@ -241,13 +245,13 @@ class DoSomethingTask:
 ```python
 class DoSomethingUseCase:
     @dataclass(frozen=True)
-    class Input:
+    class Request:
         param_1: Any
         param_2: Any
         param_3: Any
 
     @dataclass(frozen=True)
-    class Output:
+    class Response:
         param_1: Any
         param_2: Any
         param_3: Any
@@ -262,27 +266,27 @@ class DoSomethingUseCase:
         self._do_something_service = do_something_service
         self._get_something_selector = get_something_selector
 
-    def __call__(self, input_: Input) -> Output:
-        param_1 = input_.param_1
-        param_2 = input_.param_2
-        param_3 = input_.param_3
+    def execute(self, request: Request) -> Response:
+        param_1 = request.param_1
+        param_2 = request.param_2
+        param_3 = request.param_3
 
         # Here can be logic that changes the state of the database.
         # Something.objects.create(...)
 
-        do_something_service_output = self._do_something_service(
-            input_=self._do_something_service.Input(
-                param_1=get_something_selector_output.param_1,
-                param_2=get_something_selector_output.param_2,
-                param_3=get_something_selector_output.param_3,
+        do_something_service_response = self._do_something_service.execute(
+            request=self._do_something_service.Request(
+                param_1=get_something_selector_response.param_1,
+                param_2=get_something_selector_response.param_2,
+                param_3=get_something_selector_response.param_3,
             )
         )
 
         # Here can be logic that changes the state of the database.
         # Something.objects.create(...)
 
-        get_something_selector_output = self._get_something_selector(
-            input_=self._get_something_selector.Input(
+        get_something_selector_response = self._get_something_selector.execute(
+            request=self._get_something_selector.Request(
                 param_1=param_1,
                 param_2=param_2,
                 param_3=param_3,
@@ -292,7 +296,7 @@ class DoSomethingUseCase:
         # Here can be logic that changes the state of the database.
         # Something.objects.create(...)
 
-        return self.Output(
+        return self.Response(
             param_1=ANY,
             param_2=ANY,
             param_3=ANY,
@@ -303,13 +307,13 @@ class DoSomethingUseCase:
 ```python
 class DoSomethingService:
     @dataclass(frozen=True)
-    class Input:
+    class Request:
         param_1: Any
         param_2: Any
         param_3: Any
 
     @dataclass(frozen=True)
-    class Output:
+    class Response:
         param_1: Any
         param_2: Any
         param_3: Any
@@ -322,16 +326,16 @@ class DoSomethingService:
     ) -> None:
         self._get_something_selector = get_something_selector
 
-    def __call__(self, input_: Input) -> Output:
-        param_1 = input_.param_1
-        param_2 = input_.param_2
-        param_3 = input_.param_3
+    def execute(self, request: Request) -> Response:
+        param_1 = request.param_1
+        param_2 = request.param_2
+        param_3 = request.param_3
 
         # Here can be logic that does not change the state of the database, but performs some requests to external APIs, for example.
         # requests.get(...)
 
-        get_something_selector_output = self._get_something_selector(
-            input_=self._get_something_selector.Input(
+        get_something_selector_response = self._get_something_selector.execute(
+            request=self._get_something_selector.Request(
                 param_1=ANY,
                 param_2=ANY,
                 param_3=ANY,
@@ -341,7 +345,7 @@ class DoSomethingService:
         # Here can be logic that does not change the state of the database, but performs some requests to external APIs, for example.
         # requests.get(...)
 
-        return self.Output(
+        return self.Response(
             param_1=ANY,
             param_2=ANY,
             param_3=ANY,
@@ -352,19 +356,19 @@ class DoSomethingService:
 ```python
 class GetSomethingsSelector:
     @dataclass(frozen=True)
-    class Input:
+    class Request:
         param_1: Any
         param_2: Any
         param_3: Any
 
     @dataclass(frozen=True)
-    class Output:
+    class Response:
         somethings: QuerySet[Something]
 
-    def __call__(self, input_: Input) -> Output:
-        param_1 = input_.param_1
-        param_2 = input_.param_2
-        param_3 = input_.param_3
+    def execute(self, request: Request) -> Response:
+        param_1 = request.param_1
+        param_2 = request.param_2
+        param_3 = request.param_3
 
         somethings = Something.objects.filter(
             param_1=param_1,
@@ -372,46 +376,46 @@ class GetSomethingsSelector:
             param_3=param_3,
         )
 
-        return self.Output(somethings)
+        return self.Response(somethings)
 
 
 class GetSomethingByIdSelector:
     @dataclass(frozen=True)
-    class Input:
+    class Request:
         something_id: int
 
     @dataclass(frozen=True)
-    class Output:
+    class Response:
         something: Something
 
-    def __call__(self, input_: Input) -> Output:
-        something_id = input_.something_id
+    def execute(self, request: Request) -> Response:
+        something_id = request.something_id
 
         something = Something.objects.get(id=something_id)
 
-        return self.Output(something)
+        return self.Response(something)
 
 
 class GetFullNameOfSomethingByIdSelector:
     @dataclass(frozen=True)
-    class Input:
+    class Request:
         something_id: int
 
     @dataclass(frozen=True)
-    class Output:
+    class Response:
         first_name: str
         last_name: str
         full_name: str
 
-    def __call__(self, input_: Input) -> Output:
-        something_id = input_.something_id
+    def execute(self, request: Request) -> Response:
+        something_id = request.something_id
 
         something = Something.objects.get(id=something_id)
         first_name = something.first_name
         last_name = something.last_name
         full_name = f"{first_name} {last_name}"
 
-        return self.Output(
+        return self.Response(
             first_name=something.first_name,
             last_name=something.last_name,
             full_name=full_name,
